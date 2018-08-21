@@ -1,0 +1,12 @@
+rootProject.name = 'monitorAgent'
+include 'core'
+include 'windows'
+include 'oracle'
+include 'common'
+include 'sqlserver'
+include 'tomcat'
+include 'apache'
+include 'weblogic'
+include 'xml'
+include 'cpuInfo'
+

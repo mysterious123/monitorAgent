@@ -1,0 +1,123 @@
+#CPU使用率
+NT_CPUINFO:
+    win32_Processor:
+        #CPU利用率
+        - LoadPercentage
+        #数据位数
+        - DataWidth
+        #名称
+        - Name
+        #核数
+        - NumberOfCores
+        #CPU个数
+        - NumberOfLogicalProcessors
+        #频率
+        - MaxClockSpeed
+#内存使用率
+NT_PHYMEMINFO:
+    Win32_OperatingSystem:
+        #空闲物理内存(KB)
+        - FreePhysicalMemory
+        #总物理内存(KB)
+        - TotalVisibleMemorySize
+    win32_PerfFormattedData_PerfOS_Memory:
+        #可用物理内存(MB)
+         - AvailableMBytes
+    win32_ComputerSystem:
+        #总物理内存
+        - TotalPhysicalMemory
+#交换页使用率
+NT_SWAPINFO:
+    Win32_PageFileUsage:
+        #总分配的交换页
+        - AllocatedBaseSize
+        #当前已使用交换页
+        - CurrentUsage
+#磁盘使用率
+NT_DISKINFO:
+    win32_LogicalDisk:
+        #磁盘名称
+        - Caption
+        #磁盘大小(Byte)
+        - Size
+        #磁盘空闲(Byte)
+        - FreeSpace
+#磁盘读写
+NT_DISKINFO:
+    win32_PerfFormattedData_PerfDisk_LogicalDisk:
+        #磁盘名称
+        - Name
+        #磁盘总IO字节(Bytes/Sec)
+        - DiskBytesPersec
+        #磁盘总读IO字节(Bytes/Sec)
+        - DiskReadBytesPersec
+        #磁盘总写IO字节(Bytes/Sec)
+        - DiskWriteBytesPersec
+#网卡使用率
+NT_NETINTINFO:
+    win32_PerfRawData_Tcpip_NetworkInterface:
+        #网卡名称
+        - Name
+        #接收字节数(Bytes/Sec)
+        - BytesReceivedPersec
+        #发送字节数(Bytes/Sec)
+        - BytesSentPersec
+        #传输字节总数(Bytes/Sec)
+        - BytesTotalPersec
+        #带宽
+        - CurrentBandwidth
+#进程
+NT_PROCESSINFO:
+    win32_Process:
+        #进程名
+        - Name
+        #进程ID
+        - ProcessId
+        #创建时间
+        - CreationDate
+        #线程数
+        - ThreadCount
+    win32_PerfFormattedData_PerfProc_Process:
+        #进程CPU使用率
+        - PercentProcessorTime
+        #进程内存字节数
+        - WorkingSet
+        #进程IO读字节数(Bytes/Sec)
+        - IOReadBytesPersec
+        #进程IO写字节数(Bytes/Sec)
+        - IOWriteBytesPersec
+    win32_OperatingSystem:
+        #总物理内存(KB)
+        - TotalVisibleMemorySize
+#用户
+NT_USERINFO:
+    win32_UserAccount:
+        #用户名
+        - Name
+        #是否为本地用户
+        - LocalAccount
+        #域名
+        - Domain
+        #用户状态
+        - Status
+#用户
+NT_SYSINFO:
+    win32_OperatingSystem:
+        #系统版本
+        - Caption
+        #补丁版本
+        - CSDVersion
+        #厂家
+        - Manufacturer
+        #进程数
+        - NumberOfProcesses
+        #注册用户数
+        - NumberOfLicensedUsers
+        #用户数
+        - NumberOfUsers
+        #主机名
+        - CSName
+        #状态
+        - Status
+        #系统位数
+        - OSArchitecture

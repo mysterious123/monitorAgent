@@ -1,0 +1,5 @@
+group 'com.jiudaotech.monitor.agent'
+dependencies {
+    compile libraries."druid",
+            libraries."snmp4j"
+}

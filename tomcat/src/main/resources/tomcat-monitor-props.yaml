@@ -1,0 +1,19 @@
+#Catalina Type
+GlobalRequestProcessor:
+  #发送的字节数
+  - bytesSent
+  #收到的字节数
+  - bytesReceived
+  #发生错误的请求数
+  - errorCount
+  #总请求数
+  - requestCount
+  #请求总的处理时间
+  - processingTime
+  #单个请求的最大处理时间
+  - maxTime
+ThreadPool:
+  #访问服务器这个点处于busy状态的线程数
+  - currentThreadsBusy
+  #线程池最大可以产生的线程数
+  - maxThreads

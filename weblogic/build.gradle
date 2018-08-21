@@ -1,0 +1,7 @@
+group 'com.jiudaotech.monitor.agent'
+
+dependencies {
+    compile project(":common"),
+            libraries."jsoup",
+            libraries."commons-io"
+}

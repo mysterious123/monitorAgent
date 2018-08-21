@@ -1,0 +1,31 @@
+description = '核心入口'
+
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+mainClassName = 'com.jiudaotech.monitor.agent.MonitorAgent'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+    }
+}
+
+shadowJar{
+    zip64 true
+    exclude 'logback-test.xml'
+}
+
+dependencies {
+    //需要监控的类型场景，按需依赖
+    compile project(":windows")
+    compile project(":oracle")
+    compile project(":sqlserver")
+    compile project(":tomcat")
+    compile project(":apache")
+    compile project(":weblogic")
+    compile project(":xml")
+}

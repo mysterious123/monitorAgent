@@ -1,0 +1,121 @@
+###################################
+#该配置文件为一个全量配置
+#具体根据agent监控的类目配置
+###################################
+#配置监控项目，根据代理所在机器监控项目配置
+projects:
+  - windows
+  #- heartbeat
+  #- netdata
+ # - oracle
+ # - sqlserver
+  #- tomcat
+ # - apache
+ # - weblogic
+#kafka 配置
+kafka:
+    #生产者配置
+    producer:
+        #连接url
+        bootstrap.servers: 10.1.49.63:9092
+        acks: all
+        retries: 0
+        batch.size: 16384
+        linger.ms: 1
+        buffer.memory: 33554432
+        key.serializer: org.apache.kafka.common.serialization.StringSerializer
+        value.serializer: org.apache.kafka.common.serialization.StringSerializer
+    #创建topic配置
+    topic:
+        #分片数
+        numberOfPartitions: 10
+        #副本数(单机模式设置为1，集群模式可设置大于1)
+        replication: 1
+#zookeeper 配置
+zookeeper:
+    #连接url
+    hosts: 10.1.49.63:2181
+    #会话超时时间(ms)
+    sessionTimeOutMs: 30000
+    #连接超时时间(ms)
+    connectionTimeOutMs: 30000
+#agent xml配置
+netdata:
+    #心跳往kafka推送的topic
+    kafka.topic: netdata
+    #心跳间隔(ms)
+    thread.sleep: 100
+#windows 监控配置
+windows:
+    #往kafka推送的topic
+    kafka.topic: windows
+    #批次沉睡时间(ms)
+    thread.sleep: 3000
+#oracle 监控配置
+oracle:
+    #往kafka推送的topic
+    kafka.topic: oracle
+    #批次沉睡时间(ms)
+    thread.sleep: 1000
+    #数据库连接url
+    jdbc.url: jdbc:oracle:thin:@192.168.133.134:1521:orcl
+    #数据库连接用户名
+    jdbc.username: pos
+    #数据库连接密码
+    jdbc.password: pos
+#sqlserver 监控配置
+sqlserver:
+    #往kafka推送的topic
+    kafka.topic: sqlserver
+    #批次沉睡时间(ms)  ***要配置和性能计数器步调一致
+    thread.sleep: 1000
+    #系统监视器日志输出路径
+    perfmon.path: D:\monitor\sqlserver-monitor.csv
+#tomcat 监控配置
+tomcat:
+    #往kafka推送的topic
+    kafka.topic: tomcat
+    #批次沉睡时间(ms)
+    thread.sleep: 1000
+    #jmx url
+    jmx.url: service:jmx:rmi:///jndi/rmi://127.0.0.1:10001/jmxrmi
+    #jmx authenticate,如果设置为true，则username和password必须设置，具体值查看$CATALINA_HOME/conf/jmxremote.password
+    #也可设置为false，则username password可去掉
+    jmx.authenticate: true
+    #jmx username
+    jmx.username: monitorRole
+    #jmx password
+    jmx.password: tomcat
+#apache 监控配置
+apache:
+    #往kafka推送的topic
+    kafka.topic: apache
+    #批次沉睡时间(ms)
+    thread.sleep: 1000
+    serverstatus.url: http://127.0.0.1:8081/server-status?auto
+#weblogic 监控配置
+weblogic:
+    #往kafka推送的topic
+    kafka.topic: weblogic
+    #批次沉睡时间(ms)
+    thread.sleep: 1000
+    #snmp 代理地址
+    snmp.ip: 127.0.0.1
+    #snmp UDP 端口
+    snmp.portNumber: 8161
+    #snmp 社区前缀
+    snmp.Community: public
+    #目前只支持v2,固定为2即可
+    snmp.Version: 2
+    #snmp 请求超时时间
+    snmp.timeout: 1000
+#agent 心跳配置
+heartbeat:
+    #心跳往kafka推送的topic
+    kafka.topic: heartbeat
+    #心跳间隔(ms)
+    thread.sleep: 1000
+path:
+    path.string: D:\\datalogs\\datalogs\\snmp
+time:
+    monitor.time: 120000

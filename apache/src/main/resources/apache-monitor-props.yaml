@@ -1,0 +1,12 @@
+#server-status
+ServerStatus:
+  #总访问数(个)
+  - Total Accesses
+  #总字节数(KB)
+  - Total kBytes
+  #每秒请求数(个/秒)
+  - BusyWorkers
+  #每秒字节数(byte/s)
+  - BytesPerSec
+  #空闲Worker个数(个)
+  - IdleWorkers

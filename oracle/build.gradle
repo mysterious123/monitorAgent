@@ -1,0 +1,5 @@
+group 'com.jiudaotech.monitor.agent.oracle'
+dependencies {
+    compile project(":common")
+    compile fileTree(dir: "./dependency", include: "*.jar")
+}

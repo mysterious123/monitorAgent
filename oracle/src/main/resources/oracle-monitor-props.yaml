@@ -1,0 +1,120 @@
+#OOracle信息
+OR_DBINFO:
+    #DB版本/位数
+    Banner:
+      sql: select * from v$version where Banner like 'Oracle%'
+    #DB名称,归档模式,只读模式
+    DBName,ArchMode,ROMode:
+      sql: select name "DBName",log_mode "ArchMode", open_mode "ROMode" from v$database
+#数据库状态
+OR_DBSTATUS:
+    #数据库名称，数据库状态
+    DBName,DBState:
+      sql: select name DBName, open_mode DBState from v$database
+#实例状态
+OR_INSSTATUS:
+    #实例状态，实例名称
+    INSState,INSName:
+      sql: select instance_name INSName, status INSState from v$instance
+#监听状态
+OR_LNSSTATUS:
+    #监听状态
+    LNSState:
+      command: lsnrctl status
+#会话数
+OR_SESSION:
+    #数据库会话数
+    SessionCnt:
+      sql: select count(*) "SessionCnt" from V$SESSION
+    #数据库活动会话数
+    SessionActivedCnt:
+      sql: select count(*) "SessionActivedCnt" from V$SESSION  where STATUS='ACTIVE'
+#连接数
+OR_CONNECTION:
+    #数据库当前连接数
+    CurConnectionCnt:
+      sql: select count(*) "CurConnectionCnt" from v$process
+    #数据库最大连接数
+    MaxConnectionCnt:
+      sql: select count(*) "MaxConnectionCnt"  from v$parameter where name = 'processes'
+#锁
+OR_LOCK:
+    #锁总数
+    LockCnt:
+      sql: select count(*) "LockCnt" from V$LOCK
+    #死锁数量
+    DeadLockCnt:
+      sql: select count(*) "DeadLockCnt"  from v$session where sid in (select session_id from v$locked_object)
+#字典
+OR_DICTIONARY:
+    #字典命中率
+    DDHitRatio:
+      sql: select (1-(sum(getmisses)/sum(gets))) * 100 "DDHitRatio" from v$rowcache
+    #库命中率
+    LibHitRatio:
+      sql: select sum(pinhits)/sum(pins) "LibHitRatio" from v$librarycache
+#表空间状态
+OR_TABLESPACESTATUS:
+    #表空间名称,表空间类型,表空间状态
+    TableSpaceName,TableSpaceType,TableSpaceStatus:
+      sql: select TABLESPACE_NAME "TableSpaceName",ALLOCATION_TYPE "TableSpaceType",STATUS "TableSpaceStatus" from DBA_TABLESPACES
+#表空间利用率
+OR_TABLESPACEUSAGE:
+    #表空间名称,表空间大小(M),已用大小(M),空闲大小(M),表空间使用率
+    TableSpaceName,TableSpaceSize,UsedSpace,FreeSpace,Usage:
+      sql: select F.TABLESPACE_NAME "TableSpaceName",D.TOT_GROOTTE_MB "TableSpaceSize",D.TOT_GROOTTE_MB - F.TOTAL_BYTES "UsedSize",To_char(Round(( D.TOT_GROOTTE_MB - F.TOTAL_BYTES ) / D.TOT_GROOTTE_MB * 100, 2), '990.99') || '%' "Usage", F.TOTAL_BYTES "FreeSpace" from (select TABLESPACE_NAME, Round(Sum(BYTES) / ( 1024 * 1024 ), 2) TOTAL_BYTES,Round(Max(BYTES) / ( 1024 * 1024 ), 2) MAX_BYTES from SYS.DBA_FREE_SPACE GROUP  BY TABLESPACE_NAME) F,(select DD.TABLESPACE_NAME,Round(Sum(DD.BYTES) / ( 1024 * 1024 ), 2) TOT_GROOTTE_MB from   SYS.DBA_DATA_FILES DD GROUP  BY DD.TABLESPACE_NAME) D where  D.TABLESPACE_NAME = F.TABLESPACE_NAME
+#PGA
+OR_PGAHITRATIO:
+    #PGA命中率,磁盘序列,内存序列
+    PgaHitRatio,DiskSorts,MemorySorts:
+      sql: select a.value "DiskSorts", b.value "MemorySorts",round((100*b.value)/decode((a.value+b.value),0,1,(a.value+b.value)),2) "PgaHitRatio" from v$sysstat a, v$sysstat b where a.name = 'sorts (disk)' and b.name = 'sorts (memory)'
+#SGA
+OR_SGAHITRATIO:
+    #数据高速缓冲区命中率,物理读取数,获取块
+    SgaHitRatio,PhysReads,DbBlockGets:
+      sql: select sum(decode(name,'physical reads',value,0)) PhysReads,sum(decode(name,'db block gets',value,0)) DbBlockGets,sum(decode(name,'consistent gets', value,0)) con_gets,(1 - (sum(decode(name,'physical reads',value,0))/(sum(decode(name,'db block gets',value,0)) +sum(decode(name,'consistent gets',value,0))))) * 100 hitratio from v$sysstat
+#回滚段命中率
+OR_ROLLBACKHITRATIO:
+    #回滚段命中率,回滚段名称,获取次数,等待次数
+    RollBackHitRatio,RollBackName,GetsCnt,WaitsCnt:
+      sql: select RN.NAME RollBackName,RS.GETS GetsCnt ,RS.WAITS WaitsCnt ,(RS.WAITS/RS.GETS)*100 "RollBackHitRatio" from V$ROLLSTAT RS,V$ROLLNAME RN
+#回滚段大小
+OR_ROLLBACKSIZE:
+    #回滚段名称,大小
+    RollBackName,RollBackSize:
+      sql: select N.NAME RollBackName, S.RSSIZE RollBackSize from  V$ROLLNAME N, V$ROLLSTAT S where N.USN = S.USN
+#回滚段扩展次数
+OR_ROLLBACKEXTCNT:
+    #回滚段名称,扩展次数
+    RollBackName,RollBackExtendCnt:
+      sql: select N.NAME RollBackName, S.EXTENTS RollBackExtendCnt from  V$ROLLNAME N, V$ROLLSTAT S where N.USN = S.USN
+#OR_ROLLBACKEXTCNT
+OR_ROLLBACKOBJCNT:
+    #回滚段名称,活动事务数
+    RollBackName,ActivedObjCnt:
+      sql: select N.NAME RollBackName, S.XACTS ActivedObjCnt from  V$ROLLNAME N, V$ROLLSTAT S where N.USN = S.USN
+#回滚段收缩次数
+OR_ROLLBACKSHRINKCNT:
+    #回滚段名称,收缩次数
+    RollBackName,RollBackShrinkCnt:
+      sql: select name RollBackName ,shrinks RollBackShrinkCnt from v$rollstat, v$rollname where v$rollstat.usn = v$rollname.usn
+#SQL执行情况
+OR_SQLEXESTAT:
+    #SQL语句列表,用户等待时间(微妙),CPU时间(微妙),执行时间(微妙),使用内存(Bytes)
+    SQL_TEXT,UserWaitTime,CpuTime,ExecuteTime,UsedMem:
+      sql: select SQL_TEXT,RUNTIME_MEM "UsedMem",CPU_TIME "CpuTime" ,USER_IO_WAIT_TIME "UserWaitTime",SERVICE,ELAPSED_TIME "ExecuteTime"  from V$SQL
+#工作队列数量
+OR_JOBQUEUE:
+    #工作队列类型,工作队列数,工作队列等待数,工作队列总数
+    JobType,JobQueuedCnt,JobWatisCnt,JobTotalCnt:
+      sql: select TYPE "JobType",QUEUED "JobQueuedCnt",WAIT "JobWaitsCnt",TOTALQ "JobTotalCnt"  from V$QUEUE
+#失败工作队列
+OR_FAILUREJOB:
+    #失败作业数量
+    FailureJobCnt:
+      sql: select sum(FAILURES) FailureJobCnt from DBA_JOBS
+#损坏工作队列
+OR_BROKENJOB:
+    #损坏作业数量
+    BrokenJobCnt:
+      sql: select count(*) BrokenJobCnt from DBA_JOBS where BROKEN='Y'

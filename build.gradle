@@ -1,0 +1,54 @@
+group 'com.jiudaotech.monitor.agent'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+apply from: "dependency.gradle"
+
+subprojects {
+    repositories {
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        maven {
+            url "https://repo1.maven.org/maven2/"
+        }
+    }
+    apply plugin: "java"
+    apply plugin: "idea"
+    apply plugin: "eclipse"
+
+    sourceCompatibility = JAVA_VERSION
+    targetCompatibility = JAVA_VERSION
+
+    [compileJava, compileTestJava, javadoc]*.options*.encoding = "UTF-8"
+
+    // 我们使用slf4j&logback，移除commons-logging
+    // javaee-api已经包含servlet, websocket
+    configurations {
+        all*.exclude group: "org.slf4j", module: "slf4j-log4j12"
+        all*.exclude group: "commons-logging", module: "commons-logging"
+        all*.exclude group: "javax.websocket"
+    }
+
+    dependencies {
+        compile libraries."snakeyaml",
+        //日志门面
+        libraries."slf4j-api",
+        libraries."logback-core",
+        libraries."logback-classic",
+        libraries."gson",
+        libraries."jul-to-slf4j",
+        libraries."jcl-over-slf4j",
+        libraries."log4j-to-slf4j",
+        libraries."log4j-over-slf4j",
+        //kafka
+        libraries."kafkaClients",
+        libraries."kafka",
+
+        libraries."guava",
+        libraries."commons-lang3",
+        libraries."reflections"
+    }
+}
